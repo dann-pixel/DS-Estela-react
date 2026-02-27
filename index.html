@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DS Estela — MUI Component Demo</title>
+
+    <!-- Preconnect para reducir latencia con Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!--
+      Instrument Sans  → body, labels, captions, button, overline
+        Pesos: 400 (Regular), 500 (Medium), 600 (SemiBold)
+
+      Outfit            → h1–h6, display
+        Pesos: 300 (Light), 400 (Regular), 500 (Medium), 600 (SemiBold), 700 (Bold)
+    -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap"
+    />
+
+    <!--
+      Material Symbols Outlined — variable font
+      El theme configura MuiIcon.defaultProps.baseClassName = 'material-symbols-outlined'
+      para que el componente <Icon> de MUI use esta fuente en lugar de Material Icons.
+    -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
