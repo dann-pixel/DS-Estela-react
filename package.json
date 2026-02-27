@@ -1,13 +1,29 @@
 {
-  "name": "ds-estela-mui",
-  "private": true,
-  "version": "0.1.0",
+  "name": "@dann-pixel/estela-theme",
+  "version": "1.0.0",
   "type": "module",
+  "main": "./dist-theme/estela-theme.js",
+  "module": "./dist-theme/estela-theme.js",
+  "types": "./dist-theme/index.d.ts",
+  "exports": {
+    ".": "./dist-theme/estela-theme.js"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "build:theme": "vite build --config vite.theme.config.ts",
+    "publish:theme": "npm run build:theme && npm publish"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "@mui/material": ">=6",
+    "@emotion/react": ">=11",
+    "@emotion/styled": ">=11"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -28,6 +44,7 @@
     "eslint-plugin-react-refresh": "^0.4.18",
     "globals": "^15.14.0",
     "typescript": "~5.7.2",
-    "vite": "^6.1.0"
+    "vite": "^6.1.0",
+    "vite-plugin-dts": "^4.5.4"
   }
 }

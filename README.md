@@ -44,10 +44,12 @@ El sitio se abrirá en **http://127.0.0.1:5173**
 ## 📦 Scripts Disponibles
 
 ```bash
-npm run dev        # Inicia servidor de desarrollo
-npm run build      # Compila para producción
-npm run preview    # Previsualiza el build
-npm run lint       # Ejecuta ESLint
+npm run dev            # Inicia servidor de desarrollo
+npm run build          # Compila la app demo
+npm run preview        # Previsualiza el build
+npm run lint           # Ejecuta ESLint
+npm run build:theme    # Compila el theme como paquete npm
+npm run publish:theme  # Compila y publica en GitHub Packages
 ```
 
 ---
@@ -165,6 +167,89 @@ Se incluyen dos reportes de auditoría:
 ## 📄 Licencia
 
 Este proyecto es parte del Sistema de Diseño Estela.
+
+---
+
+---
+
+## 📦 Usar el theme en otros proyectos
+
+El theme de Estela está publicado como paquete npm privado en **GitHub Packages**.
+Cualquier proyecto React puede instalarlo y siempre tendrá la versión correcta.
+
+### 1. Autenticarse en GitHub Packages
+
+Necesitas un **Personal Access Token (PAT)** de GitHub con el permiso `read:packages`.
+
+> Crear en: [github.com/settings/tokens](https://github.com/settings/tokens) → *Generate new token (classic)* → marcar `read:packages`
+
+Agrega el token a tu `.npmrc` global (en tu máquina, **nunca en el repo**):
+
+```bash
+# ~/.npmrc  ← archivo en tu HOME, no en el proyecto
+//npm.pkg.github.com/:_authToken=TU_GITHUB_TOKEN
+```
+
+### 2. Configurar el registry en el proyecto consumidor
+
+Crea (o edita) el `.npmrc` en la **raíz del proyecto que quiere usar el theme**:
+
+```
+@dann-pixel:registry=https://npm.pkg.github.com
+```
+
+### 3. Instalar el paquete
+
+```bash
+npm install @dann-pixel/estela-theme
+```
+
+### 4. Usar en tu app
+
+```tsx
+import { ThemeProvider } from '@mui/material'
+import estelaTheme from '@dann-pixel/estela-theme'
+
+function App() {
+  return (
+    <ThemeProvider theme={estelaTheme}>
+      <TuApp />
+    </ThemeProvider>
+  )
+}
+```
+
+**¿Necesitas soporte dark mode?** Usa la función factory:
+
+```tsx
+import { ThemeProvider } from '@mui/material'
+import { createAppTheme } from '@dann-pixel/estela-theme'
+
+const theme = createAppTheme('dark') // o 'light'
+
+function App() {
+  return (
+    <ThemeProvider theme={theme}>
+      <TuApp />
+    </ThemeProvider>
+  )
+}
+```
+
+---
+
+## 🚢 Publicar una nueva versión
+
+1. Hacer cambios en `src/theme/index.ts`
+2. Actualizar la versión en `package.json` (ej: `1.0.0` → `1.1.0`)
+3. Autenticarse con un token con permiso `write:packages` en `~/.npmrc`
+4. Correr:
+
+```bash
+npm run publish:theme
+```
+
+> ⚠️ Asegúrate de incrementar la versión antes de publicar — GitHub Packages no permite sobreescribir una versión ya publicada.
 
 ---
 
