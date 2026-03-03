@@ -9,7 +9,7 @@
  * El ThemeProvider + CssBaseline viven en main.tsx.
  * App recibe `mode` y `onToggleMode` como props para el toggle dark/light.
  */
-import { useRef, useState } from 'react'
+import { useRef, useState, useCallback } from 'react'
 import Box from '@mui/material/Box'
 import Chip from '@mui/material/Chip'
 import Divider from '@mui/material/Divider'
@@ -21,6 +21,7 @@ import { alpha, useTheme } from '@mui/material/styles'
 import BrushIcon from '@mui/icons-material/Brush'
 import ColorLensIcon from '@mui/icons-material/ColorLens'
 import FormatSizeIcon from '@mui/icons-material/FormatSize'
+import HomeIcon from '@mui/icons-material/Home'
 import SmartButtonIcon from '@mui/icons-material/SmartButton'
 import InputIcon from '@mui/icons-material/Input'
 import ViewAgendaIcon from '@mui/icons-material/ViewAgenda'
@@ -32,6 +33,7 @@ import DarkModeIcon from '@mui/icons-material/DarkMode'
 import LightModeIcon from '@mui/icons-material/LightMode'
 
 // Demo components
+import WelcomeDemo from './components/demo/WelcomeDemo'
 import TypographyDemo from './components/demo/TypographyDemo'
 import ColorsDemo from './components/demo/ColorsDemo'
 import ButtonsDemo from './components/demo/ButtonsDemo'
@@ -48,6 +50,7 @@ const TOPBAR_HEIGHT = 56
 
 // ─── Secciones de navegación ───────────────────────────────────────────────
 const SECTIONS = [
+  { id: 'home', label: 'Inicio', icon: <HomeIcon fontSize="small" /> },
   { id: 'typography', label: 'Typography', icon: <FormatSizeIcon fontSize="small" /> },
   { id: 'colors', label: 'Colors', icon: <ColorLensIcon fontSize="small" /> },
   { id: 'buttons', label: 'Buttons', icon: <SmartButtonIcon fontSize="small" /> },
@@ -70,7 +73,7 @@ interface AppProps {
 }
 
 // ─── SectionWrapper ───────────────────────────────────────────────────────
-// Envuelve cada demo con id, padding y separador visual
+// Envuelve cada sección demo con id, padding y separador visual.
 function SectionWrapper({ id, children }: { id: string; children: React.ReactNode }) {
   return (
     <Box
@@ -94,18 +97,38 @@ function SectionWrapper({ id, children }: { id: string; children: React.ReactNod
 
 // ─── App ──────────────────────────────────────────────────────────────────
 export default function App({ mode, onToggleMode }: AppProps) {
-  const [activeSection, setActiveSection] = useState<SectionId>('typography')
+  const [activeSection, setActiveSection] = useState<SectionId>('home')
   const mainRef = useRef<HTMLDivElement>(null)
 
   // Lee el theme del contexto provisto por ThemeProvider en main.tsx
-  // para calcular los colores alpha() del sidebar
   const theme = useTheme()
 
-  // Navega suavemente a una sección y la marca como activa en el sidebar
-  const scrollToSection = (id: SectionId) => {
-    setActiveSection(id)
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  }
+  /**
+   * scrollToSection
+   * - Si `id === 'home'`: simplemente cambia la vista a la página de inicio.
+   * - Si venimos de 'home': las secciones demo no están montadas aún → espera
+   *   un tick para que React las renderice antes de hacer scroll.
+   * - Caso normal (ya estamos en secciones): scroll inmediato.
+   */
+  const scrollToSection = useCallback(
+    (id: SectionId) => {
+      const fromHome = activeSection === 'home'
+      setActiveSection(id)
+
+      if (id === 'home') return
+
+      const doScroll = () =>
+        document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+
+      if (fromHome) {
+        // Espera a que las secciones se monten
+        setTimeout(doScroll, 60)
+      } else {
+        doScroll()
+      }
+    },
+    [activeSection],
+  )
 
   return (
       <Box sx={{ display: 'flex', minHeight: '100vh' }}>
@@ -142,7 +165,7 @@ export default function App({ mode, onToggleMode }: AppProps) {
               MUI Component Demo
             </Typography>
             <Box sx={{ mt: 1 }}>
-              <Chip label="MUI v6" size="small" variant="outlined" color="primary" sx={{ fontSize: 10 }} />
+              <Chip label="MUI v7" size="small" variant="outlined" color="primary" sx={{ fontSize: 10 }} />
             </Box>
           </Box>
 
@@ -150,10 +173,13 @@ export default function App({ mode, onToggleMode }: AppProps) {
 
           {/* Links de navegación */}
           <Box component="ul" sx={{ listStyle: 'none', m: 0, p: 1, flex: 1 }}>
-            {SECTIONS.map(({ id, label, icon }) => {
+            {SECTIONS.map(({ id, label, icon }, index) => {
               const isActive = activeSection === id
+              // Separador visual entre "Inicio" y las secciones demo
+              const showDivider = index === 1
               return (
                 <Box component="li" key={id}>
+                  {showDivider && <Divider sx={{ my: 1 }} />}
                   <Box
                     component="button"
                     onClick={() => scrollToSection(id)}
@@ -240,7 +266,9 @@ export default function App({ mode, onToggleMode }: AppProps) {
             }}
           >
             <Typography variant="h6" fontWeight={700} sx={{ flex: 1 }}>
-              {SECTIONS.find((s) => s.id === activeSection)?.label ?? 'Design System'}
+              {activeSection === 'home'
+                ? 'DS Estela — Design System'
+                : (SECTIONS.find((s) => s.id === activeSection)?.label ?? 'Design System')}
             </Typography>
 
             {/* Toggle light / dark mode */}
@@ -251,60 +279,77 @@ export default function App({ mode, onToggleMode }: AppProps) {
             </Tooltip>
           </Toolbar>
 
-          {/* Secciones */}
-          <Box ref={mainRef} sx={{ flex: 1 }}>
-            <SectionWrapper id="typography">
-              <TypographyDemo />
-            </SectionWrapper>
+          {/* ── Contenido: Home (página separada) vs secciones demo ─── */}
+          {activeSection === 'home' ? (
 
-            <SectionWrapper id="colors">
-              <ColorsDemo />
-            </SectionWrapper>
+            /* Página de bienvenida — standalone, sin footer
+               Sin overflowY para que el scroll ocurra en window */
+            <Box sx={{ flex: 1 }}>
+              <WelcomeDemo
+                onNavigate={(id) => scrollToSection(id as SectionId)}
+              />
+            </Box>
 
-            <SectionWrapper id="buttons">
-              <ButtonsDemo />
-            </SectionWrapper>
+          ) : (
 
-            <SectionWrapper id="inputs">
-              <InputsDemo />
-            </SectionWrapper>
+            /* Secciones demo — scroll continuo con footer */
+            <>
+              <Box ref={mainRef} sx={{ flex: 1 }}>
+                <SectionWrapper id="typography">
+                  <TypographyDemo />
+                </SectionWrapper>
 
-            <SectionWrapper id="cards">
-              <CardsDemo />
-            </SectionWrapper>
+                <SectionWrapper id="colors">
+                  <ColorsDemo />
+                </SectionWrapper>
 
-            <SectionWrapper id="feedback">
-              <FeedbackDemo />
-            </SectionWrapper>
+                <SectionWrapper id="buttons">
+                  <ButtonsDemo />
+                </SectionWrapper>
 
-            <SectionWrapper id="navigation">
-              <NavigationDemo />
-            </SectionWrapper>
+                <SectionWrapper id="inputs">
+                  <InputsDemo />
+                </SectionWrapper>
 
-            <SectionWrapper id="data-display">
-              <DataDisplayDemo />
-            </SectionWrapper>
+                <SectionWrapper id="cards">
+                  <CardsDemo />
+                </SectionWrapper>
 
-            <SectionWrapper id="overlays">
-              <OverlaysDemo />
-            </SectionWrapper>
-          </Box>
+                <SectionWrapper id="feedback">
+                  <FeedbackDemo />
+                </SectionWrapper>
 
-          {/* Footer */}
-          <Box
-            component="footer"
-            sx={{
-              px: { xs: 3, md: 5 },
-              py: 3,
-              borderTop: '1px solid',
-              borderColor: 'divider',
-              bgcolor: 'background.paper',
-            }}
-          >
-            <Typography variant="caption" color="text.disabled">
-              DS Estela MUI — Component Demo · Fase 2 (custom theme: Instrument Sans + Outfit)
-            </Typography>
-          </Box>
+                <SectionWrapper id="navigation">
+                  <NavigationDemo />
+                </SectionWrapper>
+
+                <SectionWrapper id="data-display">
+                  <DataDisplayDemo />
+                </SectionWrapper>
+
+                <SectionWrapper id="overlays">
+                  <OverlaysDemo />
+                </SectionWrapper>
+              </Box>
+
+              {/* Footer */}
+              <Box
+                component="footer"
+                sx={{
+                  px: { xs: 3, md: 5 },
+                  py: 3,
+                  borderTop: '1px solid',
+                  borderColor: 'divider',
+                  bgcolor: 'background.paper',
+                }}
+              >
+                <Typography variant="caption" color="text.disabled">
+                  DS Estela MUI — Component Demo · Fase 2 (custom theme: Instrument Sans + Outfit)
+                </Typography>
+              </Box>
+            </>
+
+          )}
         </Box>
       </Box>
   )

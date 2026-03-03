@@ -1,0 +1,9 @@
+src/
+public/
+.claude/
+AUDIT_REPORT.md
+AUDIT_SUMMARY.md
+index.html
+vite.config.ts
+tsconfig*.json
+*.local

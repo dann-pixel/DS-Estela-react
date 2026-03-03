@@ -23,6 +23,8 @@ const COLORS = ['primary', 'secondary', 'error', 'warning', 'info', 'success'] a
 const VARIANTS = ['contained', 'outlined', 'text'] as const
 const SIZES = ['small', 'medium', 'large'] as const
 
+const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
+
 export default function ButtonsDemo() {
   const [loading, setLoading] = useState(false)
 
@@ -55,7 +57,7 @@ export default function ButtonsDemo() {
             <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
               {COLORS.map((color) => (
                 <Button key={color} variant={variant} color={color}>
-                  {color}
+                  {cap(color)}
                 </Button>
               ))}
             </Box>
@@ -72,7 +74,7 @@ export default function ButtonsDemo() {
       <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap', mb: 4 }}>
         {SIZES.map((size) => (
           <Button key={size} variant="contained" size={size}>
-            {size}
+            {cap(size)}
           </Button>
         ))}
       </Box>
@@ -142,16 +144,23 @@ export default function ButtonsDemo() {
 
       {/* 6. Color custom: dark */}
       <Typography variant="h6" gutterBottom>
-        Color custom: <code style={{ fontFamily: 'monospace', fontSize: '0.9em' }}>dark</code>
+        Color custom:{' '}
+        <Typography
+          component="code"
+          variant="caption"
+          sx={{ fontFamily: 'monospace' }}
+        >
+          dark
+        </Typography>
       </Typography>
       <Typography variant="body2" color="text.secondary" mb={2}>
         Extendido via module augmentation — disponible en Button, IconButton, Chip y SvgIcon.
       </Typography>
       <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 4 }}>
-        <Button variant="contained" color="dark">contained</Button>
-        <Button variant="outlined" color="dark">outlined</Button>
-        <Button variant="text" color="dark">text</Button>
-        <Button variant="contained" color="dark" disabled>disabled</Button>
+        <Button variant="contained" color="dark">Contained</Button>
+        <Button variant="outlined" color="dark">Outlined</Button>
+        <Button variant="text" color="dark">Text</Button>
+        <Button variant="contained" color="dark" disabled>Disabled</Button>
         <IconButton color="dark"><DeleteIcon /></IconButton>
       </Box>
 

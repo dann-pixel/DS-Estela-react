@@ -226,10 +226,11 @@ export function createAppTheme(mode: 'light' | 'dark' = 'light'): Theme {
         },
       },
 
-      // ── Button: sin sombra, sentence case ───────────────────────────────────
+      // ── Button: sin sombra, sentence case, peso 600 ─────────────────────────
       // disableElevation: elimina la sombra de los botones "contained" de forma declarativa.
       // styleOverrides: cubre todos los estados (default, hover, active, focus) por seguridad.
       // textTransform: 'none' → el texto respeta el casing del código (no force uppercase).
+      // fontWeight 600 → etiquetas más legibles y con más presencia visual.
       MuiButton: {
         defaultProps: {
           disableElevation: true,
@@ -237,6 +238,7 @@ export function createAppTheme(mode: 'light' | 'dark' = 'light'): Theme {
         styleOverrides: {
           root: {
             textTransform: 'none',
+            fontWeight: 600,
             boxShadow: 'none',
             '&:hover': { boxShadow: 'none' },
             '&:active': { boxShadow: 'none' },
@@ -264,11 +266,14 @@ export function createAppTheme(mode: 'light' | 'dark' = 'light'): Theme {
         },
       },
 
-      // ── Chip: sin sombra ─────────────────────────────────────────────────────
+      // ── Chip: sin sombra, peso 500 ───────────────────────────────────────────
+      // fontWeight 500 → etiquetas más legibles que el 400 por defecto de MUI,
+      // sin llegar al peso de los botones (600).
       MuiChip: {
         styleOverrides: {
           root: {
             boxShadow: 'none',
+            fontWeight: 500,
           },
         },
       },

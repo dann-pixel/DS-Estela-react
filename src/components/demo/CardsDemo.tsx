@@ -35,6 +35,13 @@ export default function CardsDemo() {
     theme.palette.secondary.main,
     theme.palette.warning.main,
   ]
+
+  // Colores para CardMedia — desde el theme
+  const CARD_COLORS = [
+    theme.palette.primary.dark,
+    theme.palette.success.dark,
+    theme.palette.secondary.dark,
+  ]
   return (
     <Box>
       <Typography variant="h4" gutterBottom fontWeight={700}>
@@ -86,10 +93,10 @@ export default function CardsDemo() {
       </Typography>
       <Grid container spacing={2} mb={4}>
         {[
-          { title: 'Diseño de Sistemas', subtitle: 'Design Systems', color: '#1565c0' },
-          { title: 'Componentes MUI', subtitle: 'Material UI v6', color: '#2e7d32' },
-          { title: 'Theming Custom', subtitle: 'Emotion + MUI', color: '#6a1b9a' },
-        ].map(({ title, subtitle, color }, i) => (
+          { title: 'Diseño de Sistemas', subtitle: 'Design Systems' },
+          { title: 'Componentes MUI', subtitle: 'Material UI v6' },
+          { title: 'Theming Custom', subtitle: 'Emotion + MUI' },
+        ].map(({ title, subtitle }, i) => (
           <Grid key={title} size={{ xs: 12, sm: 6, md: 4 }}>
             <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
               <CardHeader
@@ -110,12 +117,12 @@ export default function CardsDemo() {
               <CardMedia
                 sx={{
                   height: 120,
-                  bgcolor: color,
+                  bgcolor: CARD_COLORS[i],
                   opacity: 0.15,
                   backgroundImage: `repeating-linear-gradient(
                     45deg,
-                    ${color}22 0px,
-                    ${color}22 10px,
+                    ${CARD_COLORS[i]}22 0px,
+                    ${CARD_COLORS[i]}22 10px,
                     transparent 10px,
                     transparent 20px
                   )`,

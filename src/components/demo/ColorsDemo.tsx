@@ -7,12 +7,27 @@
  */
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import { useTheme } from '@mui/material/styles'
-
-// Tonos de cada paleta semántica a mostrar
-const TONES = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900] as const
+import { useTheme, lighten, darken } from '@mui/material/styles'
 
 type PaletteName = 'primary' | 'secondary' | 'error' | 'warning' | 'info' | 'success'
+
+// Tonos numéricos para la paleta Grey (blueGrey tiene 50–900 definidos)
+const TONES = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900] as const
+
+// Rampa de 10 tonos generada desde el color `main` de cada paleta
+// usando las utilidades nativas de MUI (lighten / darken)
+const RAMP_STEPS: { label: string; generate: (c: string) => string }[] = [
+  { label: '50',  generate: (c) => lighten(c, 0.9) },
+  { label: '100', generate: (c) => lighten(c, 0.75) },
+  { label: '200', generate: (c) => lighten(c, 0.6) },
+  { label: '300', generate: (c) => lighten(c, 0.45) },
+  { label: '400', generate: (c) => lighten(c, 0.25) },
+  { label: '500', generate: (c) => c },
+  { label: '600', generate: (c) => darken(c, 0.15) },
+  { label: '700', generate: (c) => darken(c, 0.3) },
+  { label: '800', generate: (c) => darken(c, 0.45) },
+  { label: '900', generate: (c) => darken(c, 0.6) },
+]
 
 const PALETTES: { name: PaletteName; label: string }[] = [
   { name: 'primary', label: 'Primary' },
@@ -118,15 +133,14 @@ export default function ColorsDemo() {
               })}
             </Box>
 
-            {/* Rampa de tonos 50–900 */}
+            {/* Rampa de tonos 50–900 generada desde main */}
             <Box sx={{ display: 'flex', borderRadius: 2, overflow: 'hidden', height: 36 }}>
-              {TONES.map((tone) => {
-                // Accede a la rampa extendida de MUI (primary[500], etc.)
-                const paletteEntry = theme.palette[name] as unknown as Record<number, string | undefined>
-                const bg = paletteEntry[tone] ?? theme.palette[name].main
+              {RAMP_STEPS.map(({ label: toneLabel, generate }) => {
+                const bg = generate(theme.palette[name].main)
+                const toneNum = parseInt(toneLabel)
                 return (
                   <Box
-                    key={tone}
+                    key={toneLabel}
                     sx={{
                       flex: 1,
                       bgcolor: bg,
@@ -134,18 +148,18 @@ export default function ColorsDemo() {
                       alignItems: 'center',
                       justifyContent: 'center',
                     }}
-                    title={`${name}[${tone}]: ${bg}`}
+                    title={`${name}[${toneLabel}]: ${bg}`}
                   >
                     <Typography
                       variant="caption"
                       sx={{
                         fontSize: 9,
-                        color: tone < 500 ? theme.palette.common.black : theme.palette.common.white,
-                        opacity: tone < 500 ? 0.6 : 0.8,
+                        color: toneNum < 500 ? theme.palette.common.black : theme.palette.common.white,
+                        opacity: toneNum < 500 ? 0.6 : 0.8,
                         fontWeight: 600,
                       }}
                     >
-                      {tone}
+                      {toneLabel}
                     </Typography>
                   </Box>
                 )

@@ -8,6 +8,7 @@
  * - List
  */
 import { useState } from 'react'
+import { useTheme, lighten } from '@mui/material/styles'
 import Avatar from '@mui/material/Avatar'
 import AvatarGroup from '@mui/material/AvatarGroup'
 import Badge from '@mui/material/Badge'
@@ -112,12 +113,40 @@ const EVENTO_COMERCIAL_TEXT: Record<EventoComercialStatus, 'success.main' | 'war
 const CHIP_COLORS = ['default', 'primary', 'secondary', 'error', 'warning', 'info', 'success'] as const
 
 // ─── Componente ───────────────────────────────────────────────────────────────
+// Coeficientes de lighten ajustados por color para que el tono suave sea
+// visualmente equilibrado: colores saturados necesitan más blanqueado,
+// colores ya claros (primary cian, info) necesitan menos.
+const SOFT_LIGHTEN: Record<typeof CHIP_COLORS[number], number> = {
+  default:   0,    // usa grey directamente
+  primary:   0.82, // cian brillante → pastel muy suave
+  secondary: 0.88, // azul/indigo vívido → lavanda pálida
+  error:     0.87, // rojo → rosa muy suave
+  warning:   0.86, // naranja → melocotón claro
+  info:      0.84, // azul cielo → celeste pálido
+  success:   0.86, // verde → menta suave
+}
+
 export default function DataDisplayDemo() {
+  const theme = useTheme()
   const [chips, setChips] = useState(['React', 'TypeScript', 'MUI', 'Vite', 'Emotion'])
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(10)
   const [selected, setSelected] = useState<number[]>([])
   const [search, setSearch] = useState('')
+
+  // Genera el sx del chip "soft": fondo pastel + texto oscuro de la paleta
+  const getSoftSx = (color: typeof CHIP_COLORS[number]) => {
+    if (color === 'default') {
+      return {
+        bgcolor: theme.palette.grey[100],
+        color: theme.palette.grey[700],
+      }
+    }
+    return {
+      bgcolor: lighten(theme.palette[color].main, SOFT_LIGHTEN[color]),
+      color: theme.palette[color].dark,
+    }
+  }
 
   const allSelected  = selected.length === DTE_ROWS.length
   const someSelected = selected.length > 0 && !allSelected
@@ -459,11 +488,27 @@ export default function DataDisplayDemo() {
             </Typography>
             <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
               {CHIP_COLORS.map((color) => (
-                <Chip key={color} label={color} color={color} variant={variant} />
+                <Chip key={color} label={color.charAt(0).toUpperCase() + color.slice(1)} color={color} variant={variant} />
               ))}
             </Box>
           </Box>
         ))}
+
+        {/* Variante soft: fondo pastel ~100 + texto oscuro de la paleta */}
+        <Box>
+          <Typography variant="caption" color="text.secondary" display="block" mb={1} fontFamily="monospace">
+            variant="soft" <Typography component="span" variant="caption" color="text.disabled">(custom sx)</Typography>
+          </Typography>
+          <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+            {CHIP_COLORS.map((color) => (
+              <Chip
+                key={color}
+                label={color.charAt(0).toUpperCase() + color.slice(1)}
+                sx={getSoftSx(color)}
+              />
+            ))}
+          </Box>
+        </Box>
       </Box>
 
       <Typography variant="h6" gutterBottom mt={3}>
@@ -565,7 +610,7 @@ export default function DataDisplayDemo() {
             AvatarGroup
           </Typography>
           <AvatarGroup max={4}>
-            {['#1976d2', '#388e3c', '#d32f2f', '#7b1fa2', '#f57c00', '#0097a7'].map((color, i) => (
+            {(['primary.main', 'success.main', 'error.main', 'secondary.dark', 'warning.main', 'info.main'] as const).map((color, i) => (
               <Avatar key={color} sx={{ bgcolor: color }}>
                 {String.fromCharCode(65 + i)}
               </Avatar>
@@ -583,9 +628,9 @@ export default function DataDisplayDemo() {
       <Paper variant="outlined" sx={{ maxWidth: 360 }}>
         <List disablePadding>
           {[
-            { name: 'Ana García',    role: 'Diseñadora',       color: '#1976d2' },
-            { name: 'Luis Martínez', role: 'Developer',        color: '#388e3c' },
-            { name: 'Sofía López',   role: 'Product Manager',  color: '#d32f2f' },
+            { name: 'Ana García',    role: 'Diseñadora',       color: 'primary.main'  },
+            { name: 'Luis Martínez', role: 'Developer',        color: 'success.main'  },
+            { name: 'Sofía López',   role: 'Product Manager',  color: 'error.main'    },
           ].map((item, index) => (
             <Box key={item.name}>
               <ListItem
