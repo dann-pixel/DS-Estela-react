@@ -1,6 +1,6 @@
 import { createTheme as o } from "@mui/material/styles";
 import { blueGrey as t } from "@mui/material/colors";
-function r(f = "light") {
+function i(f = "light") {
   return o({
     // ── Paleta ────────────────────────────────────────────────────────────────
     palette: {
@@ -156,10 +156,11 @@ function r(f = "light") {
           })
         }
       },
-      // ── Button: sin sombra, sentence case ───────────────────────────────────
+      // ── Button: sin sombra, sentence case, peso 600 ─────────────────────────
       // disableElevation: elimina la sombra de los botones "contained" de forma declarativa.
       // styleOverrides: cubre todos los estados (default, hover, active, focus) por seguridad.
       // textTransform: 'none' → el texto respeta el casing del código (no force uppercase).
+      // fontWeight 600 → etiquetas más legibles y con más presencia visual.
       MuiButton: {
         defaultProps: {
           disableElevation: !0
@@ -167,6 +168,7 @@ function r(f = "light") {
         styleOverrides: {
           root: {
             textTransform: "none",
+            fontWeight: 600,
             boxShadow: "none",
             "&:hover": { boxShadow: "none" },
             "&:active": { boxShadow: "none" },
@@ -191,19 +193,22 @@ function r(f = "light") {
           }
         }
       },
-      // ── Chip: sin sombra ─────────────────────────────────────────────────────
+      // ── Chip: sin sombra, peso 500 ───────────────────────────────────────────
+      // fontWeight 500 → etiquetas más legibles que el 400 por defecto de MUI,
+      // sin llegar al peso de los botones (600).
       MuiChip: {
         styleOverrides: {
           root: {
-            boxShadow: "none"
+            boxShadow: "none",
+            fontWeight: 500
           }
         }
       }
     }
   });
 }
-const s = r("light");
+const s = i("light");
 export {
-  r as createAppTheme,
+  i as createAppTheme,
   s as default
 };
