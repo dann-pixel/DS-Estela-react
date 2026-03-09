@@ -341,10 +341,27 @@ export default function App({ mode, onToggleMode }: AppProps) {
                   borderTop: '1px solid',
                   borderColor: 'divider',
                   bgcolor: 'background.paper',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 2,
                 }}
               >
-                <Typography variant="caption" color="text.disabled">
+                <Typography variant="caption" color="text.disabled" sx={{ flex: 1 }}>
                   DS Estela MUI — Component Demo · Fase 2 (custom theme: Instrument Sans + Outfit)
+                </Typography>
+                <Typography
+                  component="a"
+                  href="https://estela.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  variant="caption"
+                  sx={{
+                    color: 'primary.main',
+                    textDecoration: 'none',
+                    '&:hover': { textDecoration: 'underline' },
+                  }}
+                >
+                  estela.com ↗
                 </Typography>
               </Box>
             </>
