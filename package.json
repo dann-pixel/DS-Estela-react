@@ -1,6 +1,6 @@
 {
   "name": "@dann-pixel/estela-theme",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "type": "module",
   "main": "./dist-theme/estela-theme.js",
   "module": "./dist-theme/estela-theme.js",
