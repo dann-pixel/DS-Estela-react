@@ -135,10 +135,22 @@ export function createAppTheme(mode: 'light' | 'dark' = 'light'): Theme {
         },
       }),
 
-      // ── Grises: BlueGrey de MUI ──────────────────────────────────────────
-      // Reemplaza el grey neutro por BlueGrey para mayor calidez visual.
-      // Acceso: theme.palette.grey[300], blueGrey[500], etc.
-      grey: blueGrey,
+      // ── Grises: BlueGrey custom (tokens de Figma) ───────────────────────
+      // Valores extraídos del DS oficial de Figma — difieren de los de MUI.
+      // Acceso: theme.palette.grey[300], theme.palette.grey[500], etc.
+      grey: {
+        ...blueGrey,
+        50:  '#F7F9FC',
+        100: '#EDF1F7',
+        200: '#E4E9F2',
+        300: '#C5CEE0',
+        400: '#8F9BB3',
+        500: '#2E3A59',
+        600: '#222B45',
+        700: '#192038',
+        800: '#151A30',
+        900: '#101426',
+      },
     },
 
     // ── Shape ─────────────────────────────────────────────────────────────────
