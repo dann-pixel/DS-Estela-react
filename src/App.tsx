@@ -31,11 +31,13 @@ import TableChartIcon from '@mui/icons-material/TableChart'
 import LayersIcon from '@mui/icons-material/Layers'
 import DarkModeIcon from '@mui/icons-material/DarkMode'
 import LightModeIcon from '@mui/icons-material/LightMode'
+import ViewQuiltIcon from '@mui/icons-material/ViewQuilt'
 
 // Demo components
 import WelcomeDemo from './components/demo/WelcomeDemo'
 import TypographyDemo from './components/demo/TypographyDemo'
 import ColorsDemo from './components/demo/ColorsDemo'
+import LayoutDemo from './components/demo/LayoutDemo'
 import ButtonsDemo from './components/demo/ButtonsDemo'
 import InputsDemo from './components/demo/InputsDemo'
 import CardsDemo from './components/demo/CardsDemo'
@@ -53,6 +55,7 @@ const SECTIONS = [
   { id: 'home', label: 'Inicio', icon: <HomeIcon fontSize="small" /> },
   { id: 'typography', label: 'Typography', icon: <FormatSizeIcon fontSize="small" /> },
   { id: 'colors', label: 'Colors', icon: <ColorLensIcon fontSize="small" /> },
+  { id: 'layout', label: 'Layout', icon: <ViewQuiltIcon fontSize="small" /> },
   { id: 'buttons', label: 'Buttons', icon: <SmartButtonIcon fontSize="small" /> },
   { id: 'inputs', label: 'Inputs', icon: <InputIcon fontSize="small" /> },
   { id: 'cards', label: 'Cards', icon: <ViewAgendaIcon fontSize="small" /> },
@@ -165,7 +168,7 @@ export default function App({ mode, onToggleMode }: AppProps) {
               MUI Component Demo
             </Typography>
             <Box sx={{ mt: 1 }}>
-              <Chip label="MUI v7" size="small" variant="outlined" color="primary" sx={{ fontSize: 10 }} />
+              <Chip label="MUI v6" size="small" variant="outlined" color="primary" sx={{ fontSize: 10 }} />
             </Box>
           </Box>
 
@@ -301,6 +304,10 @@ export default function App({ mode, onToggleMode }: AppProps) {
 
                 <SectionWrapper id="colors">
                   <ColorsDemo />
+                </SectionWrapper>
+
+                <SectionWrapper id="layout">
+                  <LayoutDemo />
                 </SectionWrapper>
 
                 <SectionWrapper id="buttons">

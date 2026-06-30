@@ -91,7 +91,7 @@ export default function WelcomeDemo({ onNavigate }: WelcomeDemoProps) {
       icon: <CodeIcon sx={{ fontSize: 22 }} />,
       title: 'theme/index.ts',
       code: 'createAppTheme()',
-      desc: 'Los tokens se traducen a la API de MUI v7. Única fuente de verdad del branding técnico.',
+      desc: 'Los tokens se traducen a la API de MUI v6. Única fuente de verdad del branding técnico.',
       color: theme.palette.secondary.main,
     },
     {
@@ -163,7 +163,7 @@ export default function WelcomeDemo({ onNavigate }: WelcomeDemoProps) {
 
         {/* Badge versión */}
         <Chip
-          label="v1.0.1 · MUI v7 · React + Vite"
+          label="v1.1.0 · MUI v6 · React + Vite"
           size="small"
           sx={{
             mb: 4,

@@ -8,6 +8,9 @@
  * - Card con variante outlined
  */
 import { useTheme } from '@mui/material/styles'
+import Accordion from '@mui/material/Accordion'
+import AccordionDetails from '@mui/material/AccordionDetails'
+import AccordionSummary from '@mui/material/AccordionSummary'
 import Avatar from '@mui/material/Avatar'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -20,12 +23,15 @@ import Divider from '@mui/material/Divider'
 import Grid from '@mui/material/Grid2'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 import ShareIcon from '@mui/icons-material/Share'
+import { useState } from 'react'
 
 export default function CardsDemo() {
   const theme = useTheme()
+  const [expanded, setExpanded] = useState<string | false>('panel1')
 
   // Paleta de colores para avatares — desde el theme
   const AVATAR_COLORS = [
@@ -191,6 +197,46 @@ export default function CardsDemo() {
           </CardActions>
         </Box>
       </Card>
+
+      <Divider sx={{ my: 4 }} />
+
+      {/* 4. Accordion */}
+      <Typography variant="h6" gutterBottom>
+        Accordion
+      </Typography>
+      <Typography variant="body2" color="text.secondary" mb={2}>
+        Superficie estática: sin sombra, con borde — misma regla que Card.
+      </Typography>
+      <Box sx={{ maxWidth: 640 }}>
+        {[
+          { id: 'panel1', title: 'Sección general', body: 'Configuración general del componente, abierta por defecto.' },
+          { id: 'panel2', title: 'Usuarios', body: 'Permisos y roles asociados a esta sección.' },
+          { id: 'panel3', title: 'Avanzado', body: 'Opciones avanzadas, usar con precaución.', disabled: true },
+        ].map(({ id, title, body, disabled }) => (
+          <Accordion
+            key={id}
+            expanded={expanded === id}
+            disabled={disabled}
+            onChange={(_, isExpanded) => setExpanded(isExpanded ? id : false)}
+          >
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls={`${id}-content`}
+              id={`${id}-header`}
+            >
+              <Typography variant="subtitle2" fontWeight={600}>
+                {title}
+                {disabled ? ' (disabled)' : ''}
+              </Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography variant="body2" color="text.secondary">
+                {body}
+              </Typography>
+            </AccordionDetails>
+          </Accordion>
+        ))}
+      </Box>
     </Box>
   )
 }
