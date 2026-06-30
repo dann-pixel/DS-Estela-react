@@ -1,10 +1,10 @@
-import { createTheme as o } from "@mui/material/styles";
+import { createTheme as a } from "@mui/material/styles";
 import { blueGrey as t } from "@mui/material/colors";
-function i(f = "light") {
-  return o({
+function r(o = "light") {
+  return a({
     // ── Paleta ────────────────────────────────────────────────────────────────
     palette: {
-      mode: f,
+      mode: o,
       // ── Colores de marca ──────────────────────────────────────────────────
       primary: {
         main: "#00b5cc",
@@ -53,7 +53,7 @@ function i(f = "light") {
       },
       // ── Texto (modo light) ────────────────────────────────────────────────
       // Valores en hex-alpha: #101426 con opacidad de/99/61 = 87%/60%/38%
-      ...f === "light" && {
+      ...o === "light" && {
         text: {
           primary: "#101426de",
           secondary: "#10142699",
@@ -76,10 +76,22 @@ function i(f = "light") {
           focus: "#0000001f"
         }
       },
-      // ── Grises: BlueGrey de MUI ──────────────────────────────────────────
-      // Reemplaza el grey neutro por BlueGrey para mayor calidez visual.
-      // Acceso: theme.palette.grey[300], blueGrey[500], etc.
-      grey: t
+      // ── Grises: BlueGrey custom (tokens de Figma) ───────────────────────
+      // Valores extraídos del DS oficial de Figma — difieren de los de MUI.
+      // Acceso: theme.palette.grey[300], theme.palette.grey[500], etc.
+      grey: {
+        ...t,
+        50: "#F7F9FC",
+        100: "#EDF1F7",
+        200: "#E4E9F2",
+        300: "#C5CEE0",
+        400: "#8F9BB3",
+        500: "#2E3A59",
+        600: "#222B45",
+        700: "#192038",
+        800: "#151A30",
+        900: "#101426"
+      }
     },
     // ── Shape ─────────────────────────────────────────────────────────────────
     // MUI usa este valor base y lo multiplica internamente para cada componente
@@ -123,8 +135,8 @@ function i(f = "light") {
       //   Paper default (2), TableContainer (1), MobileStepper (0)
       MuiPaper: {
         styleOverrides: {
-          root: ({ theme: e, ownerState: a }) => ({
-            ...a.variant === "elevation" && (a.elevation ?? 1) <= 2 && {
+          root: ({ theme: e, ownerState: f }) => ({
+            ...f.variant === "elevation" && (f.elevation ?? 1) <= 2 && {
               boxShadow: "none",
               border: `1px solid ${e.palette.divider}`
             }
@@ -203,12 +215,27 @@ function i(f = "light") {
             fontWeight: 500
           }
         }
+      },
+      // ── Accordion: superficie estática, flat con borde ──────────────────────
+      // Accordion extiende Paper (elevation 1 por defecto). Se sobreescribe para
+      // seguir la misma regla que Card: sin sombra, borde sutil con divider.
+      // '&:before' es la línea divisoria nativa que MUI dibuja entre acordeones
+      // apilados; se quita porque el borde ya cumple esa función visualmente.
+      MuiAccordion: {
+        styleOverrides: {
+          root: ({ theme: e }) => ({
+            boxShadow: "none",
+            border: `1px solid ${e.palette.divider}`,
+            "&:before": { display: "none" },
+            "&:not(:last-of-type)": { borderBottom: "none" }
+          })
+        }
       }
     }
   });
 }
-const s = i("light");
+const s = r("light");
 export {
-  i as createAppTheme,
+  r as createAppTheme,
   s as default
 };

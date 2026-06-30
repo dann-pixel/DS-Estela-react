@@ -290,6 +290,22 @@ export function createAppTheme(mode: 'light' | 'dark' = 'light'): Theme {
         },
       },
 
+      // ── Accordion: superficie estática, flat con borde ──────────────────────
+      // Accordion extiende Paper (elevation 1 por defecto). Se sobreescribe para
+      // seguir la misma regla que Card: sin sombra, borde sutil con divider.
+      // '&:before' es la línea divisoria nativa que MUI dibuja entre acordeones
+      // apilados; se quita porque el borde ya cumple esa función visualmente.
+      MuiAccordion: {
+        styleOverrides: {
+          root: ({ theme }) => ({
+            boxShadow: 'none',
+            border: `1px solid ${theme.palette.divider}`,
+            '&:before': { display: 'none' },
+            '&:not(:last-of-type)': { borderBottom: 'none' },
+          }),
+        },
+      },
+
     },
   })
 }
